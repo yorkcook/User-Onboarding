@@ -17,19 +17,20 @@ const UserForm = ({ values, errors, touched, isSubmitting }) => {
       {touched.password && errors.password && <p>{errors.password}</p>}
       <Field type="text" name="password" placeholder="password" />
       Agree:
-      <Field type="checkbox" name="submit" placeholder="Submit" />
+      {touched.tos && errors.tos && <p>{errors.tos}</p>}
+      <Field type="checkbox" name="tos" placeholder="tos" />
       <button disabled={isSubmitting}>Submit</button>
     </Form>
   );
 };
 
 export default withFormik({
-  mapPropsToValue: ({ email, password }) => {
+  mapPropsToValue: ({ name, email, password, tos }) => {
     return {
-      name: "",
+      name: name || "",
       email: email || "",
       password: password || "",
-      submit: false
+      tos: tos || false
     };
   },
 
@@ -64,6 +65,7 @@ export default withFormik({
     password: Yup.string()
       .min(5, "Password must be at least 5 characters long")
       .max(20)
-      .required("Password is required")
+      .required("Password is required"),
+    tos: Yup.boolean().oneOf([true], "Must Accept Terms and Conditions")
   })
 })(UserForm);
